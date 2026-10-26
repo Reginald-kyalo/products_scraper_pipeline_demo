@@ -4,6 +4,11 @@ Five small labs for reviewing proxy troubleshooting, HTTP sessions, URL debuggin
 page triage, and Scrapy compatibility. All examples were rebuilt against public
 practice targets. Test pages are authored synthetic fixtures. No credentials are needed.
 
+This repository demonstrates selected engineering patterns from a larger private
+scraping project. All examples were independently rebuilt using public practice
+targets and synthetic fixtures. Proprietary implementations, retailer-specific
+findings, datasets, and credentials are excluded.
+
 | Lab | What to review | Run from this directory |
 | --- | --- | --- |
 | [01 Rotation](01_proxy_rotation_scrapy/) | Bounded retries, nonblocking backoff, slot health | `python 01_proxy_rotation_scrapy/demo.py --offline` |
