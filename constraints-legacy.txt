@@ -1,0 +1,2 @@
+# Scrapy 2.12 imports a private TLS helper removed in Twisted 26.
+Twisted==24.11.0
