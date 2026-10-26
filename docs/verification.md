@@ -26,7 +26,8 @@ row with `-c constraints-legacy.txt` as shown in the migration README.
 
 All modules were written in this independent repository without importing source
 files, data, or Git history from another project. Fixtures are authored examples.
-The destination repository is private. An initial Gitleaks 8.24.3 scan of release
-contents and a separate proprietary-name/provider/cookie denylist scan found zero
-matches. The exact staged contents must pass both checks again before the first
-commit. Neither automated check replaces human review of what is appropriate to share.
+The repository was prepared for public sharing. Gitleaks 8.24.3 and a separate
+proprietary-name/provider/cookie denylist scan found zero matches in the exact staged
+contents before the first commit. The resulting Git history also passed Gitleaks,
+and both checks were repeated before publication. Neither automated check replaces
+human review of what is appropriate to share.
