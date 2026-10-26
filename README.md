@@ -1,13 +1,39 @@
-# Scraping support demos
+# Scraping engineering — public work sample
 
-Five small labs for reviewing proxy troubleshooting, HTTP sessions, URL debugging,
-page triage, and Scrapy compatibility. All examples were rebuilt against public
-practice targets. Test pages are authored synthetic fixtures. No credentials are needed.
+[![Offline demos CI](https://github.com/Reginald-kyalo/products_scraper_pipeline_demo/actions/workflows/ci.yml/badge.svg)](https://github.com/Reginald-kyalo/products_scraper_pipeline_demo/actions/workflows/ci.yml)
 
-This repository demonstrates selected engineering patterns from a larger private
-scraping project. All examples were independently rebuilt using public practice
-targets and synthetic fixtures. Proprietary implementations, retailer-specific
-findings, datasets, and credentials are excluded.
+My larger scraping project contains proprietary implementations, datasets, and
+retailer-specific integrations that I cannot publish. I created this repository
+to provide reviewable code samples when sharing my work for job applications.
+
+These five examples demonstrate selected engineering approaches from that project:
+proxy handling, session management, pagination debugging, page classification, and
+framework compatibility. Each was independently rebuilt against public practice
+targets and synthetic fixtures, so reviewers can inspect the code, run the tests,
+and evaluate the reasoning without access to the private system. No credentials
+are needed.
+
+For a quick review, start here:
+
+1. [Pagination debugging](03_render_tier_pagination/README.md): reproduce the bug,
+   inspect the wrong URL, then run the regression against the fix.
+2. [Proxy troubleshooting guide](docs/troubleshooting-proxies.md): follow the
+   diagnostic process from symptom to a verified fix.
+3. [Async middleware migration](05_async_middleware_scrapy213/README.md): compare
+   the before/after implementations and the real Scrapy version tests.
+
+The pagination example runs offline with Python alone:
+
+```bash
+python3 03_render_tier_pagination/pagination.py
+```
+
+Its first two output lines show the fault and the corrected target:
+
+```text
+Naive: https://proxy.example/page-2.html
+Fixed: https://books.toscrape.com/catalogue/page-2.html
+```
 
 | Lab | What to review | Run from this directory |
 | --- | --- | --- |
@@ -35,10 +61,11 @@ versions, plus Chromium integration. Tests use a loopback HTTP server, synthetic
 responses, and `data:` pages; public targets are contacted only by explicit live runs.
 The intentionally broken pagination regression is a strict expected failure.
 
-For a 20-minute review, start with [pagination](03_render_tier_pagination/README.md),
-then the [proxy decision tree](docs/troubleshooting-proxies.md) and
-[five postmortems](docs/postmortems/). The postmortems describe these synthetic
-labs; they do not claim production incidents or measured performance.
+The [five postmortems](docs/postmortems/) explain the symptom, initial hypothesis,
+proof, fix, and prevention for each lab. They describe synthetic demonstrations;
+the original implementations, retailer-specific findings, datasets, and credentials
+remain private. These samples provide selected evidence of engineering skills,
+rather than the full private system or its production history.
 
 Live examples fetch one practice page with concurrency one and a delay. A region
 cookie is application state, not proof of IP location. Classifier recommendations

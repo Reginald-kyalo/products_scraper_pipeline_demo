@@ -15,8 +15,15 @@ def test_relative_next_uses_catalogue_not_proxy_wrapper():
 
 
 def test_unwrap_nested_urls_preserves_encoded_target_query():
-    target = "https://books.toscrape.com/catalogue/page-2.html?q=a%26b&page=2"
-    assert unwrap_target(wrap_target(wrap_target(target))) == target
+    # Independent two-layer fixture: do not use the normalizing production builder.
+    nested = (
+        "https://proxy.example/?url=https%3A%2F%2Fproxy.example%2F%3Furl%3D"
+        "https%253A%252F%252Fbooks.toscrape.com%252Fcatalogue%252Fpage-2.html"
+        "%253Fq%253Da%252526b%2526page%253D2"
+    )
+    assert unwrap_target(nested) == (
+        "https://books.toscrape.com/catalogue/page-2.html?q=a%26b&page=2"
+    )
 
 
 def test_plain_target_with_url_parameter_is_not_a_wrapper():

@@ -29,8 +29,9 @@ Ask for a redacted configuration shape and the status instead of a raw environme
 and whether several clients share a budget. Reduce concurrency and introduce
 bounded backoff. The rotation demo deliberately disables the framework's other
 retry middleware: two independent retry loops can multiply traffic. A server delay
-longer than the client's delay cap calls for pausing the job, not silently treating
-the cap as approval to resume. A limited, lower-rate experiment should change the
+longer than the client's delay cap stops automatic retries for that request and
+calls for the operator to pause the job; the cap does not shorten the server's
+requested wait. A limited, lower-rate experiment should change the
 result before declaring that IP reputation is the cause.
 
 **403 or 503 → inspect the body and headers.** Either can indicate a block, but

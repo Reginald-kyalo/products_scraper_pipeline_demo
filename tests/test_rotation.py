@@ -80,14 +80,28 @@ async def test_body_challenge_detected_and_auth_not_carried_to_new_proxy(middlew
     assert b"Proxy-Authorization" not in retry.headers
 
 
-async def test_retry_after_seconds_capped_and_respected(middleware, waits):
+@pytest.mark.parametrize("seconds", [3, 8])
+async def test_retry_after_within_limit_is_respected(middleware, waits, seconds):
     request = Request("https://books.toscrape.com/")
     await middleware.process_request(request)
     retry = middleware.process_response(
-        request, response(request, 429, headers={"Retry-After": "90"})
+        request, response(request, 429, headers={"Retry-After": str(seconds)})
     )
     await middleware.process_request(retry)
-    assert waits == [8]
+    assert waits == [seconds]
+
+
+@pytest.mark.parametrize("header", ["90", "Wed, 01 Jan 2098 00:00:00 GMT"])
+async def test_retry_after_over_limit_stops_retries(middleware, waits, caplog, header):
+    request = Request("https://books.toscrape.com/")
+    await middleware.process_request(request)
+    final = response(request, 429, headers={"Retry-After": header})
+    with caplog.at_level(logging.WARNING):
+        result = middleware.process_response(request, final)
+    assert result is final
+    assert waits == []
+    assert "pause the crawl" in caplog.text
+    assert request.url not in caplog.text
 
 
 async def test_transport_timeout_retried_but_programming_error_not_swallowed(middleware):

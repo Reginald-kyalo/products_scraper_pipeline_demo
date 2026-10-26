@@ -2,7 +2,8 @@
 
 The downloader middleware rotates round-robin per request. A 403, 429, 503, or a
 small generic challenge prompt triggers at most two retries. Each retry waits
-without blocking the reactor; exponential delay and `Retry-After` are capped.
+without blocking the reactor; exponential backoff is capped, and `Retry-After`
+is honored when it fits within the configured delay limit.
 Transport timeouts and connection failures share the same budget. Other exceptions
 propagate. `dont_retry` opts a request out.
 
@@ -24,9 +25,11 @@ before the built-in HTTP proxy middleware at 750, and disable the built-in retry
 middleware so retry budgets cannot multiply. The supplied runner does both.
 
 `DEMO_MAX_RETRIES`, `DEMO_BASE_DELAY`, and `DEMO_MAX_DELAY` are Scrapy settings.
-The defaults are 2, 1 second, and 30 seconds. A server delay longer than the cap
-requires an operator pause; it is not permission to keep retrying sooner indefinitely.
-For sustained 429s, stop the crawl and reduce the overall request rate.
+The defaults are 2, 1 second, and 30 seconds. A server delay longer than the limit
+stops automatic retries for that request, returns the response, and logs guidance
+to pause the crawl. The middleware does not automatically pause other requests or
+shorten the server's requested wait. For sustained 429s, stop the crawl and reduce
+the overall request rate.
 
 The health scoreboard records successes, bans, and transport errors by slot index;
 it never logs proxy URLs. This small demo does not implement distributed cooldowns,

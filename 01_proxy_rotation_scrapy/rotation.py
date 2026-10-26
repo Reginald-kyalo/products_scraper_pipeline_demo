@@ -69,6 +69,12 @@ class RotatingProxyMiddleware:
         attempts = request.meta.get("demo_retries", 0)
         if request.meta.get("dont_retry") or attempts >= self.max_retries:
             return None
+        if retry_after > self.max_delay:
+            logger.warning(
+                "Retry-After exceeds the delay limit; automatic retry stopped for this "
+                "request. Operator: pause the crawl before resuming."
+            )
+            return None
         retry = request.copy()
         retry.dont_filter = True
         retry.meta["demo_retries"] = attempts + 1

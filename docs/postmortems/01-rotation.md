@@ -15,12 +15,14 @@ that a permanent failure stops after the retry budget. No network timing is infe
 from the fake responses.
 
 **Fix:** Use one retry owner, rotate per request, wait without blocking the reactor,
-respect capped server delays, and count outcomes by proxy slot. Clear copied proxy
+honor server delays within the configured limit, stop retrying the request when a
+longer wait is required, and count outcomes by proxy slot. Clear copied proxy
 authentication when switching slots. Leave programming errors visible instead of
 retrying every exception.
 
 **Verification:** `pytest tests/test_rotation.py -q` checks the sequence, final
-failure, timeout recovery, direct mode, authentication handling, and redacted
+failure, server delays within and above the limit, timeout recovery, direct mode,
+authentication handling, and redacted
 scoreboard. The offline runner traverses Scrapy's actual downloader stack.
 
 **Prevention:** Keep retries bounded and test the permanent-failure case. For
